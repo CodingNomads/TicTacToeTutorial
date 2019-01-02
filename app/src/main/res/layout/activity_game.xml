@@ -6,13 +6,65 @@
     android:layout_height="match_parent"
     tools:context=".GameActivity">
 
-    <TextView
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gridLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        app:columnCount="3"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.22000003">
+
+        <Button
+            android:id="@+id/b-top-left"
+            style="@style/button_dark" />
+        <Button
+            android:id="@+id/b-top-center"
+            style="@style/button_light" />
+        <Button
+            android:id="@+id/b-top-right"
+            style="@style/button_dark" />
+        <Button
+            android:id="@+id/b-middle-left"
+            style="@style/button_light" />
+        <Button
+            android:id="@+id/b-middle-center"
+            style="@style/button_dark" />
+        <Button
+            android:id="@+id/b-middle-right"
+            style="@style/button_light" />
+        <Button
+            android:id="@+id/b-bottom-left"
+            style="@style/button_dark" />
+        <Button
+            android:id="@+id/b-bottom-center"
+            style="@style/button_light" />
+        <Button
+            android:id="@+id/b-bottom-right"
+            style="@style/button_dark" />
+    </android.support.v7.widget.GridLayout>
+
+    <Button
+        android:id="@+id/b-start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="52dp"
+        android:text="@string/start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv-gameResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        tools:text="You Win"
+        app:layout_constraintBottom_toTopOf="@+id/b-start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout" />
 
 </android.support.constraint.ConstraintLayout>

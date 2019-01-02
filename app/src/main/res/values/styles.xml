@@ -8,4 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="button">
+        <item name="android:layout_width">@dimen/boardSquareSide</item>
+        <item name="android:layout_height">@dimen/boardSquareSide</item>
+        <item name="android:fontFamily">casual</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">40dp</item>
+    </style>
+
+    <style name="button_light" parent="button">
+        <item name="android:background">#E5E5E5</item>
+    </style>
+
+    <style name="button_dark" parent="button">
+        <item name="android:background">#BBBBBB</item>
+    </style>
 </resources>
