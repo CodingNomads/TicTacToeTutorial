@@ -12,22 +12,41 @@ import java.util.List;
 public class GameActivity extends AppCompatActivity {
 
     public static final String PLAYER_SYMBOL = "X";
+
     private List<Button> buttons;
+    private Button startButton;
     private TextView gameResultTv;
+    private Player player = new Player(PLAYER_SYMBOL);
+    private Board board;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         initializeUi();
+        board = new Board();
     }
 
     private void initializeUi() {
-        initializeButtons();
+        initializeBoardButtons();
+        initializeStartButton();
         gameResultTv = findViewById(R.id.tv_gameResult);
     }
 
-    private void initializeButtons() {
+    private void initializeStartButton() {
+        startButton = findViewById(R.id.b_start);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                board.erase();
+                gameResultTv.setText("");
+                cleanButtons();
+                enableButtons();
+            }
+        });
+    }
+
+    private void initializeBoardButtons() {
         buttons = new ArrayList<>();
         buttons.add((Button) findViewById(R.id.b_top_left));
         buttons.add((Button) findViewById(R.id.b_top_center));
@@ -46,9 +65,34 @@ public class GameActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((Button) view).setText(PLAYER_SYMBOL);
+                    Button clickedButton = (Button) view;
+                    clickedButton.setText(PLAYER_SYMBOL);
+                    clickedButton.setClickable(false);
+                    board.mark(buttons.indexOf(clickedButton), PLAYER_SYMBOL);
+                    if(board.isThereWinner(player)){
+                        gameResultTv.setText("You win!");
+                        disableButtons();
+                    }
                 }
             });
+        }
+    }
+
+    private void disableButtons() {
+        for (Button button : buttons) {
+            button.setClickable(false);
+        }
+    }
+
+    private void enableButtons() {
+        for (Button button : buttons) {
+            button.setClickable(true);
+        }
+    }
+
+    private void cleanButtons() {
+        for (Button button : buttons) {
+            button.setText("");
         }
     }
 }
