@@ -26,9 +26,13 @@ public class Board {
         marks.set(position, mark);
     }
 
-    public boolean isThereWinner(Player player) {
+    public boolean isEmpty(Integer position){
+        return marks.get(position).isEmpty();
+    }
+
+    public boolean isThereWinner(String playerSymbol) {
         for (PossibleWin possibleWin : possibleWins) {
-            if (checkIfAreSame(possibleWin, player.getSymbol())) {
+            if (checkIfAreSame(possibleWin, playerSymbol)) {
                 return true;
             }
         }
@@ -43,5 +47,14 @@ public class Board {
         return marks.get(possibleWin.getFirst()).equals(playerSymbol) &&
                 marks.get(possibleWin.getSecond()).equals(playerSymbol) &&
                 marks.get(possibleWin.getThird()).equals(playerSymbol);
+    }
+
+    public boolean isFull() {
+        for (String mark : marks) {
+            if(mark.isEmpty()){
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -12,19 +12,27 @@ import java.util.List;
 public class GameActivity extends AppCompatActivity {
 
     public static final String PLAYER_SYMBOL = "X";
+    public static final String AI_SYMBOL = "O";
 
     private List<Button> buttons;
     private Button startButton;
     private TextView gameResultTv;
-    private Player player = new Player(PLAYER_SYMBOL);
+    private Player player;
+    private Player ai;
     private Board board;
+    private AiMoveGenerator aiMoveGenerator;
+    private boolean gameOver = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        initializeUi();
+        player = new Player(PLAYER_SYMBOL, getString(R.string.win));
+        ai = new Player(AI_SYMBOL, getString(R.string.lose));
         board = new Board();
+        aiMoveGenerator = new AiMoveGenerator(board);
+        initializeUi();
     }
 
     private void initializeUi() {
@@ -38,12 +46,17 @@ public class GameActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                board.erase();
-                gameResultTv.setText("");
-                cleanButtons();
-                enableButtons();
+                restart();
             }
         });
+    }
+
+    private void restart() {
+        board.erase();
+        gameResultTv.setText("");
+        cleanButtons();
+        enableButtons();
+        gameOver = false;
     }
 
     private void initializeBoardButtons() {
@@ -66,16 +79,55 @@ public class GameActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Button clickedButton = (Button) view;
-                    clickedButton.setText(PLAYER_SYMBOL);
-                    clickedButton.setClickable(false);
-                    board.mark(buttons.indexOf(clickedButton), PLAYER_SYMBOL);
-                    if(board.isThereWinner(player)){
-                        gameResultTv.setText("You win!");
-                        disableButtons();
+                    movePlayer(buttons.indexOf(clickedButton));
+                    if(!gameOver){
+                        moveAi();
                     }
                 }
             });
         }
+    }
+
+    private void movePlayer(int playerMove) {
+        markButton(buttons.get(playerMove), player);
+        markBoard(playerMove, player);
+        checkWin(player);
+        checkTie();
+    }
+
+    private void moveAi() {
+        Integer aiMove = aiMoveGenerator.getMove();
+        if (aiMove != null){
+            markButton(buttons.get(aiMove), ai);
+            markBoard(aiMove, ai);
+            checkWin(ai);
+            checkTie();
+        }
+
+    }
+
+    private void checkTie() {
+        if (!gameOver && board.isFull()) {
+            gameOver = true;
+            gameResultTv.setText(getString(R.string.tie));
+        }
+    }
+
+    private void checkWin(Player player) {
+        if (board.isThereWinner(player.getSymbol())) {
+            gameOver = true;
+            gameResultTv.setText(player.getWinningText());
+            disableButtons();
+        }
+    }
+
+    private void markBoard(int position, Player player) {
+        board.mark(position, player.getSymbol());
+    }
+
+    private void markButton(Button clickedButton, Player player) {
+        clickedButton.setText(player.getSymbol());
+        clickedButton.setClickable(false);
     }
 
     private void disableButtons() {
