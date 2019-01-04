@@ -1,7 +1,8 @@
 package co.codingnomads.tictactoetutorial;
 
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,8 +29,8 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        player = new Player(PLAYER_SYMBOL, getString(R.string.win));
-        ai = new Player(AI_SYMBOL, getString(R.string.lose));
+        player = new Player(PLAYER_SYMBOL, getString(R.string.win), Color.BLUE);
+        ai = new Player(AI_SYMBOL, getString(R.string.lose), Color.RED);
         board = new Board();
         aiMoveGenerator = new AiMoveGenerator(board);
         initializeUi();
@@ -80,7 +81,7 @@ public class GameActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Button clickedButton = (Button) view;
                     movePlayer(buttons.indexOf(clickedButton));
-                    if(!gameOver){
+                    if (!gameOver) {
                         moveAi();
                     }
                 }
@@ -96,10 +97,10 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void moveAi() {
-        Integer aiMove = aiMoveGenerator.getMove();
-        if (aiMove != null){
-            markButton(buttons.get(aiMove), ai);
-            markBoard(aiMove, ai);
+        Move aiMove = aiMoveGenerator.getBestMove(ai.getSymbol());
+        if (aiMove != null) {
+            markButton(buttons.get(aiMove.getPosition()), ai);
+            markBoard(aiMove.getPosition(), ai);
             checkWin(ai);
             checkTie();
         }
@@ -114,7 +115,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void checkWin(Player player) {
-        if (board.isThereWinner(player.getSymbol())) {
+        if (board.hasWon(player.getSymbol())) {
             gameOver = true;
             gameResultTv.setText(player.getWinningText());
             disableButtons();
@@ -126,6 +127,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void markButton(Button clickedButton, Player player) {
+        clickedButton.setTextColor(player.getColor());
         clickedButton.setText(player.getSymbol());
         clickedButton.setClickable(false);
     }

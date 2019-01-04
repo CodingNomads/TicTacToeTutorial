@@ -26,11 +26,11 @@ public class Board {
         marks.set(position, mark);
     }
 
-    public boolean isEmpty(Integer position){
-        return marks.get(position).isEmpty();
+    public List<String> getMarks() {
+        return marks;
     }
 
-    public boolean isThereWinner(String playerSymbol) {
+    public boolean hasWon(String playerSymbol) {
         for (PossibleWin possibleWin : possibleWins) {
             if (checkIfAreSame(possibleWin, playerSymbol)) {
                 return true;
